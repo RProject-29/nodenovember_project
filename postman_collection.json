@@ -1,0 +1,539 @@
+{
+  "info": {
+    "_postman_id": "a9e61db0-7f21-4f18-bb50-3a5e01b2a944",
+    "name": "Nodevember 4.0 - Akatsuki's Draft API",
+    "description": "Comprehensive Postman Collection for Akatsuki's Draft: AI-Enabled Content Sharing Platform Backend.\nIncludes automated token management via tests scripts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "postId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('userToken', res.token);",
+                  "    console.log('User Token saved:', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Naruto Uzumaki\",\n  \"email\": \"naruto@leaf.village\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new regular user account"
+          }
+        },
+        {
+          "name": "Register Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('adminToken', res.token);",
+                  "    console.log('Admin Token saved:', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pain Admin\",\n  \"email\": \"pain@akatsuki.org\",\n  \"password\": \"admin123456\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register an admin user account"
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('userToken', res.token);",
+                  "    console.log('User Token refreshed:', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"naruto@leaf.village\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Log in as user and receive JWT token"
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('adminToken', res.token);",
+                  "    console.log('Admin Token refreshed:', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pain@akatsuki.org\",\n  \"password\": \"admin123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Log in as admin and receive JWT token"
+          }
+        },
+        {
+          "name": "Get Profile (User)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get currently logged-in user profile details"
+          }
+        },
+        {
+          "name": "Get Profile (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Get currently logged-in admin profile details"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. User - Post Management",
+      "item": [
+        {
+          "name": "Create Post (Draft)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.post && res.post._id) {",
+                  "    pm.collectionVariables.set('postId', res.post._id);",
+                  "    console.log('Post ID saved:', res.post._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My Journey in the Ninja Academy\",\n  \"description\": \"Reflections on growth and camaraderie\",\n  \"content\": \"From being overlooked to finding true companionship. Every step is a lesson in resilience.\",\n  \"category\": \"Memoir\",\n  \"status\": \"draft\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts"]
+            },
+            "description": "Create a new post saved as draft"
+          }
+        },
+        {
+          "name": "Create Post (Pending Approval)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.post && res.post._id) {",
+                  "    pm.collectionVariables.set('postId', res.post._id);",
+                  "    console.log('Pending Post ID saved:', res.post._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Philosophy of Will of Fire\",\n  \"description\": \"A study of purpose and collective harmony\",\n  \"content\": \"Where tree leaves dance, one shall find flames. The fire's shadow will illuminate the village, and once again, tree leaves shall bud anew.\",\n  \"category\": \"Philosophy\",\n  \"status\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts"]
+            },
+            "description": "Create a new post submitted directly for admin approval"
+          }
+        },
+        {
+          "name": "View All Approved Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts"]
+            },
+            "description": "Public endpoint to view all approved posts"
+          }
+        },
+        {
+          "name": "View Post By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}",
+                "description": "Optional: provides access to own draft/pending posts"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts", "{{postId}}"]
+            },
+            "description": "View post by ID (public if approved, or author/admin if draft/pending)"
+          }
+        },
+        {
+          "name": "View My Posts and Drafts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/posts/my-posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts", "my-posts"]
+            },
+            "description": "View all posts and drafts created by the authenticated user"
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The Philosophy of Will of Fire (Revised Edition)\",\n  \"description\": \"Expanded insights on wisdom and enduring peace\",\n  \"status\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts", "{{postId}}"]
+            },
+            "description": "Update your own post or change status to pending for approval"
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["posts", "{{postId}}"]
+            },
+            "description": "Delete your own post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Admin - Post Approval",
+      "item": [
+        {
+          "name": "View Pending Posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/posts/pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "posts", "pending"]
+            },
+            "description": "Admin endpoint to view all posts awaiting approval"
+          }
+        },
+        {
+          "name": "Approve Post",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/posts/approve/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "posts", "approve", "{{postId}}"]
+            },
+            "description": "Admin approves a pending post, making it publicly visible"
+          }
+        },
+        {
+          "name": "Reject Post",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/posts/reject/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "posts", "reject", "{{postId}}"]
+            },
+            "description": "Admin rejects a post"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. AI Integration",
+      "item": [
+        {
+          "name": "Improve Content Using AI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructions\": \"Improve formatting, enhance vocabulary, and make the tone inspiring.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ai/improve/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "improve", "{{postId}}"]
+            },
+            "description": "Improve post content using Google Gemini AI and save as a new draft under the same user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Media & Cloudinary Upload",
+      "item": [
+        {
+          "name": "Upload Image to Cloudinary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.imageUrl) {",
+                  "    pm.collectionVariables.set('uploadedImageUrl', res.imageUrl);",
+                  "    console.log('Uploaded Image URL saved:', res.imageUrl);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{userToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "description": "Select an image file (PNG, JPG, WEBP, GIF, SVG)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/upload/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["upload", "image"]
+            },
+            "description": "Uploads an image file to Cloudinary and returns the secure URL for use in posts"
+          }
+        }
+      ]
+    }
+  ]
+}
